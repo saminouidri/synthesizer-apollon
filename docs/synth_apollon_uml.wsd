@@ -1,0 +1,100 @@
+@startuml
+
+class MainWidget {
+ -QList<QString>* instrument/wave/etc
+ -QDial* phaseDial/detuneDial/etc
+ -QDial* oscA_phaseDial/etc
+ -QPushButton* play
+ -QpushButton* record
+ -QSlider* keyPitch
+ -QSlider* stringPitch
+ -QImage* waveSine/etc
+ -QImage* filterHigh/etc
+ -QImage* instrumentVisual/etc
+ -QIODevice* midiKeyboard
+
+ +MainWidget()
+}
+
+class Sound {
+    +double frequency
+    +double sample_frequency = 44100
+    +play(double phase, double detune, double cutoff, double gain)
+}
+
+class OSCA {
+    +bool isAdditive
+}
+
+class Timeline {
+    +Track track1
+    +Track track2
+    +Track track3
+    +Track track4
+    +playTracks()
+    +pauseTracks()
+    +stopTracks()
+    +addTrack()
+    +moveTrack()
+    +removeTrack()
+    +setScale()
+
+}
+
+class Track {
+    +String filename
+    +double length
+    +import()
+    +play()
+    +setStartTime()
+    +setEndTime()
+}
+
+
+class MIDI {
+    +bool isDetected
+    +int nbTouches
+    +handleMIDIMessage()
+}
+
+class Keyboard {
+    +handleKeyPress()
+}
+
+enum INSTRUMENTS {
+    Synthesizer
+    Grand Piano
+    Organ
+    Guitar
+}
+
+enum WAVE {
+    Sine 
+    Square 
+    Saw 
+    Triangle 
+}
+
+enum FILTER {
+    High 
+    Low 
+    Pass 
+    Stop  
+}
+
+enum MODE {
+    Playing
+    Capture
+    loop
+    Launchpad 
+}
+
+Sound *--- INSTRUMENTS : include
+Sound *--- WAVE : include
+Sound *--- OSCA : inherits
+Timeline *--- MODE : include
+Sound *--- FILTER : include
+Sound o--- MyWidget : calls
+
+
+@enduml

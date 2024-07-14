@@ -1,0 +1,72 @@
+# You can copy and paste this template into a new `.gitlab-ci.yml` file.
+# You should not add this template to an existing `.gitlab-ci.yml` file by using the `include:` keyword.
+#
+# To contribute improvements to CI/CD templates, please follow the Development guide at:
+# https://docs.gitlab.com/ee/development/cicd/templates.html
+# This specific template is located at:
+# https://gitlab.com/gitlab-org/gitlab/-/blob/master/lib/gitlab/ci/templates/C++.gitlab-ci.yml
+
+# use the official gcc image, based on debian
+# can use versions as well, like gcc:5.2
+# see https://hub.docker.com/_/gcc/
+
+## Auteur(s) : Sami Nouidri & Noel Druart
+
+
+image:
+  name: suroxhub/ubuntu-qt:5.12.5
+  entrypoint: [ '/bin/bash', '-c', 'ln  -snf  /bin/bash  /bin/sh  &&  /bin/bash  -c  $0' ]
+
+build:
+  stage: build
+  before_script:
+    - echo "build"
+    - apt update --yes
+    - apt install --yes cmake g++ qt5-default qttools5-dev-tools
+    - apt install -y libasound2-dev
+    - export CXXFLAGS="$CXXFLAGS -Wall -Wextra -Wno-unused-parameter"
+
+  script:
+    - cd SynthApollon/
+    - qmake
+    - make
+
+  artifacts:
+    paths:
+      - SynthApollon/bin/
+      # depending on your build setup it's most likely a good idea to cache outputs to reduce the build time
+      # cache:
+      #   paths:
+      #     - "*.o"
+
+test_apollon:
+  stage: test
+  before_script:
+    - echo "build"
+    - apt update --yes
+    - apt install --yes cmake g++ qt5-default qttools5-dev-tools
+    - apt install -y libasound2-dev
+    - export CXXFLAGS="$CXXFLAGS -Wall -Wextra -Wno-unused-parameter"
+
+  script:
+    - cd SynthApollon/TestApollon/TestApollon/
+    - qmake -d
+    - make
+    - ./TestApollon
+
+documentation:
+  image: suroxhub/doxygen-image:latest
+  stage: deploy
+  before_script:
+    - apt-get update
+    - apt-get -y install doxygen
+    - doxygen Doxyfile
+    - apt-get update -qq && apt-get install -y -qq graphviz
+  script:
+    - doxygen Doxyfile
+    - cd docs/html
+    - ls -a
+
+  artifacts:
+    paths:
+      - docs/html

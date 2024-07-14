@@ -1,0 +1,17 @@
+<RCC>
+    <qresource prefix="/res">
+        <file alias="bg">res/synth-apollon_base.png</file>
+        <file alias="saw">res/saw.png</file>
+        <file alias="sine">res/sine.png</file>
+        <file alias="square">res/square.png</file>
+        <file alias="triangle">res/triangle.png</file>
+        <file alias="piano">res/piano.png</file>
+        <file alias="synth">res/synth.png</file>
+        <file alias="band-pass">res/band-pass.png</file>
+        <file alias="band-stop">res/band-stop.png</file>
+        <file alias="high-pass">res/high-pass.png</file>
+        <file alias="low-pass">res/low-pass.png</file>
+        <file alias="keyboard">res/keyboard.png</file>
+        <file alias="guitar">res/guitar.png</file>
+    </qresource>
+</RCC>
